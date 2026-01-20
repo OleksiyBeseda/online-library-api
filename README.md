@@ -8,3 +8,9 @@ REST API онлайн-библиотеки (Symfony + JWT + PostgreSQL)
 docker-compose up -d
 docker exec -it online-library-app bash
 composer install
+```
+
+## Запуск контейнера
+```bash
+docker exec -it app bash
+```
