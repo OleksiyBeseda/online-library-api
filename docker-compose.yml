@@ -1,14 +1,16 @@
 version: '3.8'
 services:
   app:
-    image: php:8.2-fpm
+    image: php:8.2-cli
     container_name: app
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
     ports:
       - "8000:8000"
-    command: php -S 0.0.0.0:8000 -t public
+    stdin_open: true     # <-- важно
+    tty: true            # <-- важно
+    command: bash
     depends_on:
       - db
 
