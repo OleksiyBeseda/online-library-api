@@ -1,9 +1,3 @@
-
----
-
-# 3️⃣ `src/Entity/User.php`
-
-```php
 <?php
 
 namespace App\Entity;

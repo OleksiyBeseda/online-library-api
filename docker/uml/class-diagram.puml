@@ -1,0 +1,70 @@
+@startuml ClassDiagram
+skinparam classAttributeIconSize 0
+
+class User {
+    +int id
+    +string email
+    +string password
+    +string role
+    +getRoles()
+    +getEmail()
+    +setEmail(email)
+    +getPassword()
+    +setPassword(password)
+    +getRole()
+    +setRole(role)
+}
+
+class Book {
+    +int id
+    +string title
+    +string description
+    +int publishedYear
+    +getAuthors()
+    +getGenres()
+    +addAuthor(a)
+    +removeAuthor(a)
+}
+
+class Author {
+    +int id
+    +string name
+    +getBooks()
+    +addBook(b)
+    +removeBook(b)
+}
+
+class Genre {
+    +int id
+    +string name
+    +getBooks()
+    +addBook(b)
+    +removeBook(b)
+}
+
+class Favorite {
+    +User user
+    +Book book
+}
+
+class JwtAuthenticator {
+    +supports(request)
+    +authenticate(request)
+    +onAuthenticationSuccess()
+    +onAuthenticationFailure()
+    +start()
+}
+
+class RoleVoter {
+    +supports(attribute, subject)
+    +voteOnAttribute(attribute, subject, token)
+}
+
+User "1" --> "*" Favorite
+Book "1" --> "*" Favorite
+Book "*" --> "*" Author
+Author "*" --> "*" Book
+Book "*" --> "*" Genre
+Genre "*" --> "*" Book
+
+@enduml

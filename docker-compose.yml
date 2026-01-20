@@ -1,30 +1,28 @@
-version: '3.9'
-
+version: '3.8'
 services:
   app:
-    build:
-      context: ./docker/php
-    container_name: online-library-app
+    image: php:8.2-fpm
+    container_name: app
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
     ports:
       - "8000:8000"
+    command: php -S 0.0.0.0:8000 -t public
     depends_on:
-      - postgres
-    command: ["symfony", "server:start", "--no-tls", "--allow-http", "--port=8000"]
+      - db
 
-  postgres:
+  db:
     image: postgres:15
-    container_name: online-library-db
+    container_name: postgres
     environment:
+      POSTGRES_DB: library
       POSTGRES_USER: library_user
       POSTGRES_PASSWORD: library_pass
-      POSTGRES_DB: library_db
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  db_data:

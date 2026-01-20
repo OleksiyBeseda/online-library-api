@@ -1,0 +1,27 @@
+@startuml
+actor Client
+participant "FavoriteController" as FC
+participant "JwtAuthenticator" as JWT
+participant "UserProvider" as UP
+participant "BookRepository" as BR
+database "PostgreSQL" as DB
+
+Client -> FC : POST /api/favorites/{bookId} + Authorization: Bearer <token>
+FC -> JWT : authenticate(request)
+JWT -> UP : loadUserByUsername(email_from_token)
+UP -> DB : SELECT * FROM users WHERE email=?
+DB --> UP : user data
+UP --> JWT : User object
+JWT --> FC : authenticated User
+
+FC -> BR : find(bookId)
+BR -> DB : SELECT * FROM books WHERE id=?
+DB --> BR : Book object
+BR --> FC : Book object
+
+FC -> DB : INSERT INTO favorites(user_id, book_id)
+DB --> FC : success
+
+FC --> Client : 200 OK { "message": "Book added to favorites" }
+
+@enduml

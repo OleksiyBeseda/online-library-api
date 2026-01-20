@@ -1,0 +1,35 @@
+@startuml
+actor Admin
+participant "BookController" as BC
+participant "JwtAuthenticator" as JWT
+participant "UserProvider" as UP
+participant "BookRepository" as BR
+participant "AuthorRepository" as AR
+participant "GenreRepository" as GR
+database "PostgreSQL" as DB
+
+Admin -> BC : POST /api/books + Authorization: Bearer <token> + book data
+BC -> JWT : authenticate(request)
+JWT -> UP : loadUserByUsername(email_from_token)
+UP -> DB : SELECT * FROM users WHERE email=?
+DB --> UP : User object
+UP --> JWT : authenticated User
+
+BC -> JWT : check ROLE_ADMIN
+JWT --> BC : authorized
+
+BC -> AR : findOrCreate(authors)
+AR -> DB : SELECT/INSERT authors
+DB --> AR : Author objects
+
+BC -> GR : findOrCreate(genres)
+GR -> DB : SELECT/INSERT genres
+DB --> GR : Genre objects
+
+BC -> BR : create Book object with title, description, year, authors, genres
+BR -> DB : INSERT INTO books
+DB --> BR : success
+
+BC --> Admin : 201 Created { "bookId": 123 }
+
+@enduml

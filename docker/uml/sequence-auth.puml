@@ -1,0 +1,17 @@
+@startuml
+actor Client
+participant "AuthController" as AC
+participant "JwtAuthenticator" as JWT
+participant "UserProvider" as UP
+database "PostgreSQL" as DB
+
+Client -> AC : POST /api/login {email, password}
+AC -> UP : loadUserByUsername(email)
+UP -> DB : SELECT * FROM users WHERE email=?
+DB --> UP : user data
+UP --> AC : User object
+AC -> JWT : generateToken(User)
+JWT --> AC : JWT token
+AC --> Client : 200 OK {token}
+
+@enduml

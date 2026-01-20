@@ -1,0 +1,49 @@
+@startuml ERD
+
+entity "User" as U {
+    * id : int
+    * email : string
+    * password : string
+    * role : string
+}
+
+entity "Book" as B {
+    * id : int
+    * title : string
+    * description : text
+    * publishedYear : int
+}
+
+entity "Author" as A {
+    * id : int
+    * name : string
+}
+
+entity "Genre" as G {
+    * id : int
+    * name : string
+}
+
+entity "Favorite" as F {
+    * user_id : int
+    * book_id : int
+}
+
+entity "Book_Author" {
+    * book_id : int
+    * author_id : int
+}
+
+entity "Book_Genre" {
+    * book_id : int
+    * genre_id : int
+}
+
+U ||--o{ F : has
+B ||--o{ F : favorited_by
+B ||--o{ Book_Author : written_by
+A ||--o{ Book_Author : authors
+B ||--o{ Book_Genre : categorized_in
+G ||--o{ Book_Genre : genres
+
+@enduml
