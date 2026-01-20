@@ -1,7 +1,10 @@
 # Online Library API
 
-REST API онлайн-библиотеки на Symfony 6 + PostgreSQL + JWT.
+REST API онлайн-библиотеки (Symfony + JWT + PostgreSQL)
 
-## Запуск через Docker
+## Установка
+
 ```bash
 docker-compose up -d
+docker exec -it online-library-app bash
+composer install
