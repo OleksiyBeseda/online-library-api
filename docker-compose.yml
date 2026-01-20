@@ -1,15 +1,17 @@
+version: "3.9"
+
+
 services:
     app:
-        image: php:8.3-cli
+        build: .
         container_name: app
-        working_dir: /var/www/html
         volumes:
-            - ./:/var/www/html
+            - ./app:/var/www/html
         ports:
             - "8000:8000"
-        command: sleep infinity
         depends_on:
             - db
+        command: sleep infinity  # контейнер живет, можно exec
 
     db:
         image: postgres:15
