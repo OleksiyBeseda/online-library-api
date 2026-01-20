@@ -1,0 +1,14 @@
+{
+  "name": "vendor_name/online-library-api",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "macobeseda-90210",
+      "email": "beseda.odessa@gmail.com"
+    }
+  ],
+  "require": {
+  }
+}
