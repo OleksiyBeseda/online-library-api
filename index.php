@@ -1,7 +1,7 @@
 <?php
 // public/index.php
 
-use app\Kernel;
+use app\src\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 
 require dirname(__DIR__).'/vendor/autoload.php';
