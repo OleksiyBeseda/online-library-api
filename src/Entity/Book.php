@@ -28,10 +28,10 @@ class Book
     #[ORM\Column(length: 13, nullable: true)]
     private ?string $isbn = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'created_at')]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column]
+    #[ORM\Column(name: 'updated_at')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books')]
@@ -61,7 +61,6 @@ class Book
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -73,7 +72,6 @@ class Book
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -85,7 +83,6 @@ class Book
     public function setPublishedYear(?int $publishedYear): static
     {
         $this->publishedYear = $publishedYear;
-
         return $this;
     }
 
@@ -97,7 +94,6 @@ class Book
     public function setIsbn(?string $isbn): static
     {
         $this->isbn = $isbn;
-
         return $this;
     }
 
@@ -109,7 +105,6 @@ class Book
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -121,7 +116,6 @@ class Book
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -138,14 +132,12 @@ class Book
         if (!$this->authors->contains($author)) {
             $this->authors->add($author);
         }
-
         return $this;
     }
 
     public function removeAuthor(Author $author): static
     {
         $this->authors->removeElement($author);
-
         return $this;
     }
 
@@ -162,14 +154,12 @@ class Book
         if (!$this->genres->contains($genre)) {
             $this->genres->add($genre);
         }
-
         return $this;
     }
 
     public function removeGenre(Genre $genre): static
     {
         $this->genres->removeElement($genre);
-
         return $this;
     }
 }
