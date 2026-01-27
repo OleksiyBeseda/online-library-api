@@ -1,110 +1,106 @@
-Doctrine:
-
 # Online Library API
 
-This project is a Symfony-based API for managing an online library, using Docker for environment isolation and PostgreSQL as the database.
+This project is a Symfony-based REST API for managing an online library. It uses Docker for environment isolation and PostgreSQL as the database.
 
 ---
 
-## Prerequisites
+## 🚀 Getting Started
 
-- Docker & Docker Compose installed
-- Git
+### 1️⃣ Prerequisites
 
----
+Ensure you have the following installed on your Mac:
+- **Docker & Docker Compose**
+- **Git**
 
-## Project Setup
+### 2️⃣ Project Setup
 
-### 1️⃣ Clone the repository
+Follow these steps to get the project running from scratch:
 
+#### 1. Clone the repository
 ```bash
 git clone <your-repo-url>
 cd online-library-api
+```
 
-2️⃣ Start Docker containers
+#### 2. Start Docker containers
+This command builds the application image and starts the `app` and `db` services.
+```bash
 docker compose up -d
+```
+> **Host Command:** Run this on your Mac.
 
+#### 3. Install dependencies
+Enter the `app` container and run composer install.
+```bash
+docker exec -it app composer install
+```
+> **Host Command:** Run this on your Mac to execute inside the container.
 
-This will start two services:
+#### 4. Configure Environment
+Ensure your `.env` file (or `.env.local`) has the correct database connection:
+```env
+DATABASE_URL="postgresql://library_user:library_pass@db:5432/library?serverVersion=15&charset=utf8"
+```
+*(The default `DATABASE_URL` in `.env` is already configured for Docker).*
 
-app – Symfony application
+#### 5. Initialize Database and Migrations
+Run these commands to create the database and apply migrations:
+```bash
+# Create the database (if it doesn't exist)
+docker exec -it app php bin/console doctrine:database:create --if-not-exists
 
-db – PostgreSQL database
+# Run migrations
+docker exec -it app php bin/console doctrine:migrations:migrate --no-interaction
+```
 
-Check the containers:
+### 3️⃣ Verify the Installation
 
-docker compose ps
+- **API Base URL:** [http://localhost:8000/api](http://localhost:8000/api)
+- **Database Connection:** 
+  You can connect to PostgreSQL using any client (like DBeaver or `psql`):
+  - **Host:** `localhost`
+  - **Port:** `5433`
+  - **User:** `library_user`
+  - **Password:** `library_pass`
+  - **Database:** `library`
 
+---
 
-Both should have status Up.
+## 📖 API Documentation (Swagger/OpenAPI)
 
-3️⃣ Enter the application container
-docker exec -it app bash
+The API is documented using the OpenAPI 3.0 specification.
 
+1. Locate the `api.yaml` file in the project root.
+2. To view it in a friendly UI, you can:
+   - Use the [Swagger Editor](https://editor.swagger.io/) and paste the content of `api.yaml`.
+   - Install a browser extension like "Swagger UI Viewer".
+   - Run a local Swagger UI container:
+     ```bash
+     docker run -p 8080:8080 -e SWAGGER_JSON=/app/api.yaml -v $(pwd):/app swaggerapi/swagger-ui
+     ```
+     Then open [http://localhost:8080](http://localhost:8080).
 
-Now you are inside the container, which already has PHP and Composer installed.
+---
 
-4️⃣ Install PHP dependencies
-composer install
+## 🛠 Useful Docker Commands
 
-5️⃣ Configure the database
+| Action | Command |
+| :--- | :--- |
+| **Start containers** | `docker compose up -d` |
+| **Stop containers** | `docker compose down` |
+| **Rebuild images** | `docker compose build` |
+| **View status** | `docker compose ps` |
+| **View logs** | `docker compose logs -f` |
+| **Shell inside app** | `docker exec -it app bash` |
+| **Check DB tables** | `docker exec -it postgres psql -U library_user -d library -c "\dt"` |
 
-Ensure your .env or .env.local contains the correct DATABASE_URL:
+---
 
-DATABASE_URL=pgsql://library_user:library_pass@db:5432/library
+## 💡 Notes for Mac Users
 
-6️⃣ Create the database
-
-If the database already exists, skip this step.
-To recreate the database:
-
-export PGPASSWORD=library_pass
-psql -h db -U library_user -d postgres -c "DROP DATABASE IF EXISTS library;"
-psql -h db -U library_user -d postgres -c "CREATE DATABASE library;"
-
-7️⃣ Apply Doctrine migrations
-php bin/console doctrine:migrations:migrate
-
-
-When prompted:
-
-WARNING! You are about to execute a migration ...
-Are you sure you wish to continue? (yes/no) [yes]:
-
-
-Type:
-
-yes
-
-
-This will create the necessary tables and schema in the database.
-
-8️⃣ Verify setup
-
-Access the app at: http://localhost:8000
-
-Check the database tables:
-
-psql -h db -U library_user -d library
-\dt
-
-9️⃣ Useful Docker commands
-# Stop and remove containers
-docker compose down
-
-# Rebuild containers
-docker compose build
-
-# View running containers
-docker compose ps
-
-# Access the app container
-docker exec -it app bash
-
-Notes
-
-The app container is configured to have PHP and Composer installed.
-
-Use .env.local to override sensitive variables without committing them.
-
-Always ensure DATABASE_URL points to the db service inside Docker, not 127.0.0.1.
+- All `docker exec` commands should be run from your terminal on the host machine.
+- If you encounter `Could not open input file: bin/console`, ensure you are in the project root and that the Docker volume mapping is correct in `docker-compose.yml`:
+  ```yaml
+  volumes:
+    - .:/var/www/html
+  ```
