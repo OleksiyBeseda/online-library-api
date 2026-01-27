@@ -55,30 +55,45 @@ docker exec -it app php bin/console doctrine:migrations:migrate --no-interaction
 
 ### 3️⃣ Verify the Installation
 
-- **API Base URL:** [http://localhost:8000/api](http://localhost:8000/api)
-- **Database Connection:** 
-  You can connect to PostgreSQL using any client (like DBeaver or `psql`):
-  - **Host:** `localhost`
-  - **Port:** `5433`
-  - **User:** `library_user`
-  - **Password:** `library_pass`
-  - **Database:** `library`
+#### 1. Check API Status
+Once the containers are up and migrations are run, you can verify the API is working:
+```bash
+# Get list of books (should return empty array [] and HTTP 200)
+curl -i http://localhost:8000/api/books
+```
+If you see a `200 OK` response, the autowiring fix is successful.
+
+#### 2. Database Connection
+You can connect to PostgreSQL using any client (like DBeaver or `psql`):
+- **Host:** `localhost`
+- **Port:** `5433`
+- **User:** `library_user`
+- **Password:** `library_pass`
+- **Database:** `library`
 
 ---
 
 ## 📖 API Documentation (Swagger/OpenAPI)
 
-The API is documented using the OpenAPI 3.0 specification.
+The API is documented using the OpenAPI 3.0 specification in `api.yaml`.
 
-1. Locate the `api.yaml` file in the project root.
-2. To view it in a friendly UI, you can:
-   - Use the [Swagger Editor](https://editor.swagger.io/) and paste the content of `api.yaml`.
-   - Install a browser extension like "Swagger UI Viewer".
-   - Run a local Swagger UI container:
-     ```bash
-     docker run -p 8080:8080 -e SWAGGER_JSON=/app/api.yaml -v $(pwd):/app swaggerapi/swagger-ui
-     ```
-     Then open [http://localhost:8080](http://localhost:8080).
+### How to view the documentation:
+1. **Online Editor:** Copy the content of `api.yaml` and paste it into the [Swagger Editor](https://editor.swagger.io/).
+2. **Local Swagger UI:** Run a temporary container to view the docs:
+   ```bash
+   docker run -p 8080:8080 -e SWAGGER_JSON=/app/api.yaml -v $(pwd):/app swaggerapi/swagger-ui
+   ```
+   Then open [http://localhost:8080](http://localhost:8080) in your browser.
+
+---
+
+## 👨‍💻 Administrative Commands
+
+### Change User Role
+To promote a user to `ROLE_ADMIN` (required for creating books or exporting CSV):
+```bash
+docker exec -it app php bin/console app:change-role <email> ROLE_ADMIN
+```
 
 ---
 

@@ -22,7 +22,7 @@ class Book
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: true, name: 'published_year')]
     private ?int $publishedYear = null;
 
     #[ORM\Column(length: 13, nullable: true)]
