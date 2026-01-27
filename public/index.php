@@ -1,14 +1,15 @@
 <?php
 
-use app\src\Kernel;
-use Symfony\Component\ErrorHandler\Debug;
+use App\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
-Debug::enable();
+if (file_exists(dirname(__DIR__).'/.env')) {
+    (new \Symfony\Component\Dotenv\Dotenv())->bootEnv(dirname(__DIR__).'/.env');
+}
 
-$kernel = new Kernel('dev', true);
+$kernel = new Kernel($_SERVER['APP_ENV'] ?? 'dev', (bool) ($_SERVER['APP_DEBUG'] ?? true));
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();

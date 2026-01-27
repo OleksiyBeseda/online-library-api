@@ -34,4 +34,29 @@ class ExportService
 
         return $csv->toString();
     }
+
+    /**
+     * @param resource $stream
+     */
+    public function exportBooksToStream($stream): void
+    {
+        $books = $this->bookRepository->findAll();
+        $csv = Writer::createFromStream($stream);
+
+        $csv->insertOne(['ID', 'Title', 'Authors', 'Genres', 'Published Year', 'ISBN']);
+
+        foreach ($books as $book) {
+            $authors = implode(', ', array_map(fn($a) => $a->getName(), $book->getAuthors()->toArray()));
+            $genres = implode(', ', array_map(fn($g) => $g->getName(), $book->getGenres()->toArray()));
+
+            $csv->insertOne([
+                $book->getId(),
+                $book->getTitle(),
+                $authors,
+                $genres,
+                $book->getPublishedYear(),
+                $book->getIsbn(),
+            ]);
+        }
+    }
 }

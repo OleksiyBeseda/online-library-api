@@ -31,6 +31,14 @@ class BookService
 
     public function createBook(array $data): Book
     {
+        if (empty($data['authors'])) {
+            throw new \InvalidArgumentException('A book must have at least one author.');
+        }
+
+        if (empty($data['genres'])) {
+            throw new \InvalidArgumentException('A book must have at least one genre.');
+        }
+
         $book = new Book();
         $book->setTitle($data['title']);
         $book->setDescription($data['description'] ?? null);
